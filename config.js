@@ -1,3 +1,3 @@
 export default {
-    key:"MyBloodyApp",
+    key: 'MyBloodyApp',
 }
