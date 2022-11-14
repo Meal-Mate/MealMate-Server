@@ -1,5 +1,8 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
+
 const Schema = mongoose.Schema
 
 const User = Schema(
@@ -30,6 +33,15 @@ const User = Schema(
         Verified: {
             type: Boolean,
             default: false,
+        },
+        resetPasswordToken: {
+            type: String,
+            required: false,
+        },
+
+        resetPasswordExpires: {
+            type: Date,
+            required: false,
         },
     },
     { timestamps: true }
@@ -63,6 +75,27 @@ User.methods.isPasswordMatch = function (plainPassword, hashed, callback) {
             return callback(err)
         }
         callback(null, isMatch)
+    })
+}
+
+//generate usertoken expire in 1hour
+User.methods.generatePasswordReset = function () {
+    this.resetPasswordToken = crypto.randomBytes(20).toString('hex')
+    this.resetPasswordExpires = Date.now() + 3600000 //expires in an hour
+}
+
+User.methods.generateJWT = function () {
+    const today = new Date()
+    const expirationDate = new Date(today)
+    expirationDate.setDate(today.getDate() + 60)
+
+    let payload = {
+        id: this._id,
+        email: this.email,
+        username: this.username,
+    }
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: parseInt(expirationDate.getTime() / 1000, 10),
     })
 }
 
