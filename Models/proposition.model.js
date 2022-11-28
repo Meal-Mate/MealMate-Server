@@ -7,7 +7,7 @@ const Proposition = Schema(
             type: String,
             required: 'This field is required!',
         },
-        restaurantName: {
+        name: {
             type: String,
             required: 'This field is required!',
         },
