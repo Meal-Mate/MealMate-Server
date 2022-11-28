@@ -130,10 +130,10 @@ export function Register(req, res) {
         .save()
         .then(() => {
             const token = jwt.sign(
-                { newuser },
-                config.key /*{ expiresIn: ONE_WEEK }*/
+                { id:newuser.email },
+                config.key ,{ expiresIn: '10m' }
             )
-            const url = `http://localhost:9095/api/verify/${token}`
+            const url = `http://127.0.0.1:9095/user/verify/${token}`
             transporter.sendMail({
                 to: email,
                 subject: 'Verify Account',
@@ -147,6 +147,28 @@ export function Register(req, res) {
             res.status(403).json({ msg: err })
         })
 }
+
+export  function verifier(req, res) {
+    const {token } = req.params
+
+    // Check we have an id
+    if (!token) {
+        return res.status(422).send({ 
+             message: "Missing Token" 
+        });
+    }
+    
+       let data = jwt.decode(
+           token,config.key
+        );
+        User.findOneAndUpdate({email:data.id},{$set:{Verified: true}},(err,result)=>{
+            if(err) return res.status(500).json({msg:err});
+            const msg={msg:"verified successfully updated",email:data.id};
+            return res.json(msg);
+        });
+       
+   }
+
 
 export function login(req, res) {
     const email = req.body.email
