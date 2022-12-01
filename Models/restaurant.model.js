@@ -20,6 +20,10 @@ const Restaurant = Schema(
             type: String,
             required: 'This field is required!',
         },
+        description: {
+            type: String,
+            required: 'this field is required!',
+        },
         Verified: {
             type: Boolean,
             default: false,

@@ -2,8 +2,23 @@ import * as PropositionService from '../service/propostion.service.js'
 
 export const addProposition = async (req, res) => {
     const proposition = await PropositionService.addProposition(req.body)
-    res.status(200).send(proposition)
+    res.status(200).send({
+        success: true,
+        data: proposition,
+    })
 }
+export const getPropositions = async (req, res) => {
+    const proposition = await PropositionService.getProposition()
+    if (!proposition) {
+        throw new Error('Proposition not found')
+    }
+    res.status(200).json({
+        success: true,
+        count: proposition.length,
+        data: proposition,
+    })
+}
+
 export const updateProposition = async (req, res) => {
     const proposition = await PropositionService.updateProposition(
         req.params.id,

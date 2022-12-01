@@ -1,15 +1,30 @@
 import * as RestaurantService from '../service/restaurant.service.js'
 
 export const addRestaurant = async (req, res) => {
+    console.log(req.file, req.files, req.body)
+    if (req.file) {
+        Object.assign(req.body, {
+            image: req.file.filename,
+        })
+    }
     const restaurant = await RestaurantService.addRestaurant(req.body)
     res.status(200).send(restaurant)
 }
+
 export const updateRestaurant = async (req, res) => {
     const restaurant = await RestaurantService.updateRestaurant(
         req.params.id,
         req.body
     )
     res.status(200).send(restaurant)
+}
+
+export const getRestaurants = async (req, res) => {
+    const restaurant = await RestaurantService.getRestaurant()
+    if (!restaurant) {
+        throw new Error('Restaurant not found')
+    }
+    res.status(200).json(restaurant)
 }
 
 export const getRestaurant = async (req, res) => {
