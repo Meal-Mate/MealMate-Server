@@ -27,7 +27,7 @@ const port = process.env.PORT || 8080
 
 mongoose.set('debug', process.env.NODE_ENV === 'dev')
 mongoose.Promise = global.Promise
-const azureMongoStringUrl = process.env.AZUREMONGOURL
+const azureMongoStringUrl = process.env.MONGO_URL
 mongoose
     .connect(
         process.env.NODE_ENV === 'dev'
@@ -43,7 +43,7 @@ mongoose
 
 //for azure ping health check
 app.route('/').get((req, res) =>
-    res.json({ message: 'Welcome to MealMate' }).status(200)
+    res.json({ message: 'Welcome to MealMate Api Server' }).status(200)
 )
 
 const views = fileURLToPath(import.meta.url)
