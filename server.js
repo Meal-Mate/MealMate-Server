@@ -1,12 +1,11 @@
-import express, { application, json } from 'express'
+import express from 'express'
 import mongoose from 'mongoose'
 import adminRoutes from './Routes/admin.route.js'
 import userRoutes from './Routes/user.route.js'
 import restaurantRoutes from './Routes/restaurant.route.js'
 import propositionRoutes from './Routes/proposition.route.js'
 import restauthRoutes from './Routes/restauth.route.js'
-import passport from 'passport'
-import morgan from 'morgan'
+
 import * as dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import path from 'path'
@@ -24,13 +23,17 @@ app.use('/proposition', propositionRoutes)
 app.use('/restpassword', restauthRoutes)
 app.use('/uploadrestaurant', express.static('/uploads'))
 const hostname = process.env.DEVURL
-const port = process.env.PORT || 9095
+const port = process.env.PORT || 8080
 
-mongoose.set('debug', true)
+mongoose.set('debug', process.env.NODE_ENV === 'dev')
 mongoose.Promise = global.Promise
-
+const azureMongoStringUrl = process.env.AZUREMONGOURL
 mongoose
-    .connect('mongodb://127.0.0.1/MealMateDB')
+    .connect(
+        process.env.NODE_ENV === 'dev'
+            ? 'mongodb://127.0.0.1/MealMateDB'
+            : azureMongoStringUrl
+    )
     .then(() => {
         console.log(`Connected to database`)
     })
@@ -38,7 +41,10 @@ mongoose
         console.log(err)
     })
 
-app.route('/').get((req, res) => res.json(data))
+//for azure ping health check
+app.route('/').get((req, res) =>
+    res.json({ message: 'Welcome to MealMate' }).status(200)
+)
 
 const views = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(views)
@@ -47,6 +53,6 @@ app.set('view engine', 'jade')
 
 //upload image
 
-app.listen(port, hostname, () => {
+app.listen(port, () => {
     console.log(`server running at http://${hostname}:${port}/`)
 })
