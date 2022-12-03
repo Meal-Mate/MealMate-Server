@@ -2,7 +2,7 @@ import User from '../models/user.model.js'
 import sgMail from '@sendgrid/mail'
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-
+//TODO : add try catch
 export const recover = async (req, res) => {
     await User.findOne({ email: req.body.email })
         .then((user) => {

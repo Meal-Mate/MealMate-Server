@@ -22,10 +22,6 @@ const Proposition = Schema(
                 index: '2dsphere',
             },
         },
-        restaurantName: {
-            type: String,
-            required: 'This field is required!',
-        },
         mates: {
             type: String,
         },
