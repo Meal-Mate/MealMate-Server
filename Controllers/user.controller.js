@@ -197,7 +197,7 @@ export function login(req, res) {
                 email: user.email,
                 id: user._id,
             }
-            if (!user.verified) {
+            if (user.verified === false) {
                 return res.status(403).send({
                     message: 'Verify your Account.',
                 })
