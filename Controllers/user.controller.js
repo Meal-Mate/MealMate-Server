@@ -141,6 +141,7 @@ export function Register(req, res) {
             })
             res.status(201).send({
                 message: `Sent a verification email to ${email}`,
+                newuser,
             })
         })
         .catch((err) => {
