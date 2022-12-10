@@ -133,14 +133,12 @@ export function Register(req, res) {
                 { newuser },
                 config.key /*{ expiresIn: ONE_WEEK }*/
             )
+            res.status(201).send(newuser)
             const url = `http://localhost:9095/api/verify/${token}`
             transporter.sendMail({
                 to: email,
                 subject: 'Verify Account',
                 html: `Click <a href = '${url}'>here</a> to confirm your email.`,
-            })
-            res.status(201).send({
-                newuser,
             })
         })
         .catch((err) => {
