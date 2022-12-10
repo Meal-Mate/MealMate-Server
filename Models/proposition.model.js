@@ -4,7 +4,8 @@ const Schema = mongoose.Schema
 const Proposition = Schema(
     {
         owner: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: 'This field is required!',
         },
         name: {
@@ -18,6 +19,11 @@ const Proposition = Schema(
             type: String,
             required: 'This field is required!',
         },
+        restaurant: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'Restaurant',
+            required: 'This field is required!'
+        }
     },
     { timestamps: true }
 )

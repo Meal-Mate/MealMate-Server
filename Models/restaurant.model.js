@@ -24,6 +24,16 @@ const Restaurant = Schema(
             type: Boolean,
             default: false,
         },
+        coordinates: {
+            long: {
+                type: Number,
+                required: 'This field is required!',
+            },
+            lat: {
+                type: Number, 
+                required: 'This field is required!',
+            }
+        }
     },
     { timestamps: true }
 )

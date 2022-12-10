@@ -34,6 +34,10 @@ const User = Schema(
             type: Boolean,
             default: false,
         },
+        propositions:[{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Proposition'
+        }],
         resetPasswordToken: {
             type: String,
             required: false,

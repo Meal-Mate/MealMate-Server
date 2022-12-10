@@ -1,7 +1,7 @@
 import Proposition from '../Models/proposition.model.js'
 
 export const getPropositionById = async (id) => {
-    return Proposition.findById(id)
+    return Proposition.findById(id).populate('restaurant')
 }
 
 export const addProposition = async (userBody) => {
