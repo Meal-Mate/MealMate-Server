@@ -140,7 +140,6 @@ export function Register(req, res) {
                 html: `Click <a href = '${url}'>here</a> to confirm your email.`,
             })
             res.status(201).send({
-                message: `Sent a verification email to ${email}`,
                 newuser,
             })
         })
