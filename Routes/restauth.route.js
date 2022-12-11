@@ -22,7 +22,7 @@ router.post(
     recover
 )
 
-router.get('/reset/:token', reset)
+//router.get('/reset/:token', reset)
 
 router.post(
     '/reset/:token',
