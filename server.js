@@ -22,6 +22,7 @@ app.use('/restaurant', restaurantRoutes)
 app.use('/proposition', propositionRoutes)
 app.use('/restpassword', restauthRoutes)
 app.use('/uploadrestaurant', express.static('/uploads'))
+
 const hostname = process.env.DEVURL
 const port = process.env.PORT || 8080
 
@@ -44,6 +45,9 @@ mongoose
 //for azure ping health check
 app.route('/').get((req, res) =>
     res.json({ message: 'Welcome to MealMate Api Server' }).status(200)
+)
+app.route('/apple-app-site-association').get((req, res) =>
+    res.sendFile(__dirname + '/apple-app-site-association')
 )
 
 const views = fileURLToPath(import.meta.url)

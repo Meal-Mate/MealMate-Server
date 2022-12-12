@@ -38,5 +38,4 @@ router.post(
     ],
     resetPassword
 )
-
 export default router
