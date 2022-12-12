@@ -4,6 +4,10 @@ export const getPropositionById = async (id) => {
     return Proposition.findById(id).populate('restaurant')
 }
 
+export const getAllProposition = async () => {
+    return Proposition.find().populate('restaurant')
+}
+
 export const addProposition = async (userBody) => {
     return Proposition.create(userBody)
 }

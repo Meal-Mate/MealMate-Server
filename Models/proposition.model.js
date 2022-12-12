@@ -12,9 +12,9 @@ const Proposition = Schema(
             type: String,
             required: 'This field is required!',
         },
-        mates: {
+        mates: [{
             type: String,
-        },
+        }],
         date: {
             type: String,
             required: 'This field is required!',

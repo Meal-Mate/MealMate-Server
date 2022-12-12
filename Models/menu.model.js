@@ -14,6 +14,10 @@ const Menu = Schema(
             ref:'Restaurant',
             required: 'This field is required!',
         },
+
+        categorie: {
+            type: String
+        }
         
        
     },

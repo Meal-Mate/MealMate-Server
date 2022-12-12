@@ -29,3 +29,18 @@ export const deleteRestaurant = async (req, res) => {
         res.status(500).json({ message: error.message, stack: error.stack })
     }
 }
+
+export const find_restau= async(req,res)=>{
+
+    const id = req.params.id
+    try {
+        await RestaurantService.deleteRestaurant(id)
+        res.status(200).json({ message: 'restaurant deleted' })
+    } catch (error) {
+        res.status(500).json({ message: error.message, stack: error.stack })
+    }
+
+
+}
+
+

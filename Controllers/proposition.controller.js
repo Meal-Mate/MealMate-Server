@@ -22,6 +22,13 @@ export const getProposition = async (req, res) => {
     res.send(proposition)
 }
 
+export const getAllProposition = async (req, res) => {
+    const proposition = await PropositionService.getAllProposition()
+    res.status(200).send(proposition)
+}
+
+
+
 export const deleteProposition = async (req, res) => {
     const id = req.params.id
     try {
