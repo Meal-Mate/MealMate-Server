@@ -2,7 +2,7 @@ import User from '../models/user.model.js'
 import sgMail from '@sendgrid/mail'
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-//TODO : add try catch
+
 export const recover = async (req, res) => {
     await User.findOne({ email: req.body.email })
         .then((user) => {
@@ -65,13 +65,10 @@ export const reset = async (req, res) => {
                     message: 'Password reset token is invalid or has expired.',
                 })
 
-            var options = { cache: true }
-            res.compile('reset', options)
-
             //Redirect user to form with the email address
-            res.renderFile('reset', { user })
+            res.render('reset', { user })
         })
-        .catch((err) => res.status(500).json({ message: 'a' }))
+        .catch((err) => res.status(500).json({ message: err.message }))
 }
 
 export const resetPassword = async (req, res) => {
