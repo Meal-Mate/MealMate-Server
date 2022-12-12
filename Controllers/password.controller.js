@@ -65,7 +65,7 @@ export const reset = async (req, res) => {
                     message: 'Password reset token is invalid or has expired!',
                 })
 
-            //Redirect user to form with the email
+            //Redirect user to form
             res.render('reset', { user })
         })
         .catch((err) => res.status(500).json({ message: err.message }))
