@@ -68,7 +68,7 @@ export const reset = async (req, res) => {
             //Redirect user to form
             res.render('reset', { user })
         })
-        .catch((err) => res.status(500).json({ message: err.message }))
+        .catch((err) => res.status(500).json({ message: err }))
 }
 
 export const resetPassword = async (req, res) => {
