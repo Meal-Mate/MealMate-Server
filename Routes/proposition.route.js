@@ -3,11 +3,15 @@ import {
     addProposition,
     updateProposition,
     deleteProposition,
+    getProposition,
+    getPropositions,
 } from '../Controllers/proposition.controller.js'
 
 const router = express.Router()
 
-router.route('/')
+router.route('/').get(getPropositions)
+
+router.route('/:id').get(getProposition)
 
 router.route('/add').post(addProposition)
 

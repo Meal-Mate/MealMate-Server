@@ -1,11 +1,15 @@
 import Restaurant from '../Models/restaurant.model.js'
 
 export const getRestaurantById = async (id) => {
-    return Restaurant.findById(id)
+    return await Restaurant.findById(id)
+}
+
+export const getRestaurant = async () => {
+    return await Restaurant.find()
 }
 
 export const addRestaurant = async (userBody) => {
-    return Restaurant.create(userBody)
+    return await Restaurant.create(userBody)
 }
 
 export const updateRestaurant = async (id, updatebody) => {

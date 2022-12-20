@@ -1,42 +1,58 @@
-import express, { application, json } from 'express'
+import express from 'express'
 import mongoose from 'mongoose'
-
 import adminRoutes from './Routes/admin.route.js'
 import userRoutes from './Routes/user.route.js'
 import restaurantRoutes from './Routes/restaurant.route.js'
 import propositionRoutes from './Routes/proposition.route.js'
 import restauthRoutes from './Routes/restauth.route.js'
-import passport from 'passport'
-import morgan from 'morgan'
-import { fileURLToPath } from 'url'
-import path from 'path'
 
+import * as dotenv from 'dotenv'
+import bodyParser from 'body-parser'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+dotenv.config()
 const app = express()
 app.use(express.json())
-
-const hostname = '127.0.0.1'
-const port = process.env.PORT || 9095
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/user', userRoutes)
 app.use('/admin', adminRoutes)
 app.use('/restaurant', restaurantRoutes)
 app.use('/proposition', propositionRoutes)
 app.use('/restpassword', restauthRoutes)
-mongoose.connect('mongodb://127.0.0.1/MealMateDB')
+app.use('/uploadrestaurant', express.static('/uploads'))
+const hostname = process.env.DEVURL
+const port = process.env.PORT || 8080
+
+mongoose.set('debug', process.env.NODE_ENV === 'dev')
+mongoose.Promise = global.Promise
+const azureMongoStringUrl = process.env.MONGO_URL
+mongoose
+    .connect(
+        process.env.NODE_ENV === 'dev'
+            ? 'mongodb://127.0.0.1/MealMateDB'
+            : azureMongoStringUrl
+    )
+    .then(() => {
+        console.log(`Connected to database`)
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+
+//for azure ping health check
+app.route('/').get((req, res) =>
+    res.json({ message: 'Welcome to MealMate Api Server' }).status(200)
+)
 
 const views = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(views)
 app.set('views', path.join(__dirname, 'Views'))
 app.set('view engine', 'jade')
 
-const connection = mongoose.connection
-connection.once('open', () => {
-    // eslint-disable-next-line no-console
-    console.log('MongoDb connected')
-})
+//upload image
 
-app.route('/').get((req, res) => res.json(data))
-
-app.listen(port, hostname, () => {
+app.listen(port, () => {
     console.log(`server running at http://${hostname}:${port}/`)
 })

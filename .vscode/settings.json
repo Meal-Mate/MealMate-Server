@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/877caf44-ca4f-4ced-86f0-d400bc1ada40/AppServices/subscriptions/877caf44-ca4f-4ced-86f0-d400bc1ada40/resourceGroups/MealMateApiServer/providers/Microsoft.Web/sites/MealMateApiServer",
+    "appService.deploySubpath": "."
+}

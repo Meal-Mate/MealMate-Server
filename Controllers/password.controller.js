@@ -62,13 +62,13 @@ export const reset = async (req, res) => {
         .then((user) => {
             if (!user)
                 return res.status(401).json({
-                    message: 'Password reset token is invalid or has expired.',
+                    message: 'Password reset token is invalid or has expired!',
                 })
 
-            //Redirect user to form with the email address
+            //Redirect user to form
             res.render('reset', { user })
         })
-        .catch((err) => res.status(500).json({ message: 'a' }))
+        .catch((err) => res.status(500).json({ message: err.message }))
 }
 
 export const resetPassword = async (req, res) => {
@@ -78,7 +78,7 @@ export const resetPassword = async (req, res) => {
     }).then((user) => {
         if (!user)
             return res.status(401).json({
-                message: 'Password reset token is invalid or has expired.',
+                message: 'Password reset token is invalid or has expired!',
             })
 
         user.password = req.body.password

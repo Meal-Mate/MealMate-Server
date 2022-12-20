@@ -7,12 +7,16 @@ export const getPropositionById = async (id) => {
 export const addProposition = async (userBody) => {
     return Proposition.create(userBody)
 }
+export const getProposition = async () => {
+    return Proposition.find()
+}
 
 export const updateProposition = async (id, updatebody) => {
     const proposition = await getPropositionById(id)
     if (!proposition) {
         throw new Error('no proposition found')
-    }
+    } 
+
     Object.assign(proposition, updatebody)
     return await proposition.save()
 }
