@@ -1,16 +1,11 @@
 import mongoose from 'mongoose'
-import { geocoder } from '../utils/geocoder.js'
 
 const Schema = mongoose.Schema
 const Proposition = Schema(
     {
         owner: {
-            type: String,
-            required: 'This field is required!',
-        },
-        address: {
-            type: String,
-            required: 'This field is required!',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
         },
         location: {
             type: {
@@ -22,30 +17,20 @@ const Proposition = Schema(
                 index: '2dsphere',
             },
         },
-        mates: {
+        propostiondDate: { type: String },
+        propostionStatus: {
             type: String,
+            default: 'pending',
+            enum: ['pending', 'accepted', 'rejected'],
         },
-        date: {
-            type: String,
-            required: 'This field is required!',
-        },
+        mates: { type: String },
+        restaurantPlaceId: { type: String },
+        restaurantName: { type: String },
+        restaurantAddress: { type: String },
+        restaurantImages: [{ type: String }],
+        userRatingsTotal: { type: Number },
     },
     { timestamps: true }
 )
-
-// Geocode & create location
-Proposition.pre('save', async function (next) {
-    const loc = await geocoder.geocode(this.address)
-    console.log(loc)
-    this.location = {
-        type: 'Point',
-        coordinates: [loc[0].longitude, loc[0].latitude],
-        formattedAddress: loc[0].formattedAddress,
-    }
-
-    // Do not save address in DB
-    this.address = undefined
-    next()
-})
 
 export default mongoose.model('Proposition', Proposition)

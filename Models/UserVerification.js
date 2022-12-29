@@ -15,7 +15,7 @@ const UserVerification = Schema(
             type: Date,
         },
         expiresAt: {
-            type: String,
+            type: Date,
         },
     },
     { timestamps: true }

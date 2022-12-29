@@ -1,26 +1,16 @@
 import User from '../models/user.model.js'
 import UserVerification from '../models/UserVerification.js'
-import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import config from '../config.js'
-import middleware from '../middlewares/jwToken.js'
 import bcrypt from 'bcrypt'
-
-import path from 'path'
-
+import sgMail from '@sendgrid/mail'
 import { v4 as uuidv4 } from 'uuid'
+import path from 'path'
 import {} from 'dotenv/config'
-
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-
-    auth: {
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS,
-    },
-})
+import { fileURLToPath } from 'url'
 
 export function verifyUrl(req, res) {
+    console.log('verifyUrl')
     let { userId, uniqueString } = req.params
     UserVerification.find({ userId })
         .then((result) => {
@@ -56,17 +46,23 @@ export function verifyUrl(req, res) {
                         .compare(uniqueString, hashedUniqueString)
                         .then((result) => {
                             if (result) {
+                                console.log('verified')
                                 User.updateOne(
                                     { _id: userId },
-                                    { verified: true }
+                                    { Verified: true }
                                 )
                                     .then(() => {
-                                        User.deleteOne({ userId })
+                                        UserVerification.deleteOne({ userId })
                                             .then(() => {
+                                                const views = fileURLToPath(
+                                                    import.meta.url
+                                                )
+                                                const __dirname =
+                                                    path.dirname(views)
                                                 res.sendFile(
                                                     path.join(
                                                         __dirname,
-                                                        '../Views/verified.html'
+                                                        './../Views/verified.html'
                                                     )
                                                 )
                                             })
@@ -74,7 +70,7 @@ export function verifyUrl(req, res) {
                                                 let message =
                                                     'kenet bech ta5tef '
                                                 res.redirect(
-                                                    `/user/verified/error=true&message=${message}`
+                                                    `/user/verified/error=true&message=${error}`
                                                 )
                                             })
                                     })
@@ -102,6 +98,7 @@ export function verifyUrl(req, res) {
             } else {
                 let message = 'ya activitou ya mech mawjoud sorry pal '
                 res.redirect(`/user/verified/error=true&message=${message}`)
+                res.status(200).json({ message: res })
             }
         })
         .catch((error) => {
@@ -112,7 +109,36 @@ export function verifyUrl(req, res) {
 }
 
 export function verifiedUrl(req, res) {
-    res.sendFile(path.join(__dirname, '../Views/verified.html'))
+    console.log(__dirname)
+    res.sendFile(path.join(__dirname, './../Views/verified.html'))
+}
+export function sendVerificationMail({ _id, email }, res) {
+    const uniqueString = uuidv4() + _id
+    const url = `https://mealmate.azurewebsites.net/user/verify/`
+
+    sgMail.send({
+        to: email,
+        from: process.env.FROM_EMAIL,
+        subject: 'Verify Account',
+        html: `Click <a href = '${
+            url + _id + '/' + uniqueString
+        }'>here</a> to confirm your email.`,
+        function(error) {
+            if (error) {
+                console.log(error)
+            }
+        },
+    })
+    const saltRounds = 10
+    bcrypt.hash(uniqueString, saltRounds).then((hashedUniqueString) => {
+        const userVerification = new UserVerification({
+            userId: _id,
+            uniqueString: hashedUniqueString,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
+        })
+        userVerification.save()
+    })
 }
 
 export function Register(req, res) {
@@ -128,18 +154,9 @@ export function Register(req, res) {
 
     newuser
         .save()
-        .then(() => {
-            const token = jwt.sign(
-                { newuser },
-                config.key /*{ expiresIn: ONE_WEEK }*/
-            )
+        .then((result) => {
             res.status(201).send(newuser)
-            const url = `http://localhost:9095/api/verify/${token}`
-            transporter.sendMail({
-                to: email,
-                subject: 'Verify Account',
-                html: `Click <a href = '${url}'>here</a> to confirm your email.`,
-            })
+            sendVerificationMail(result, res)
         })
         .catch((err) => {
             res.status(403).json({ msg: err })

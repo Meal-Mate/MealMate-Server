@@ -5,6 +5,8 @@ import userRoutes from './Routes/user.route.js'
 import restaurantRoutes from './Routes/restaurant.route.js'
 import propositionRoutes from './Routes/proposition.route.js'
 import restauthRoutes from './Routes/restauth.route.js'
+import placesRoutes from './Routes/places.route.js'
+import * as placesService from './service/placesService.js'
 
 import * as dotenv from 'dotenv'
 import bodyParser from 'body-parser'
@@ -20,6 +22,7 @@ app.use('/user', userRoutes)
 app.use('/admin', adminRoutes)
 app.use('/restaurant', restaurantRoutes)
 app.use('/proposition', propositionRoutes)
+app.use('/places', placesRoutes)
 app.use('/restpassword', restauthRoutes)
 app.use('/uploadrestaurant', express.static('/uploads'))
 const hostname = process.env.DEVURL
@@ -53,6 +56,8 @@ app.set('view engine', 'jade')
 
 //upload image
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`server running at http://${hostname}:${port}/`)
+    const test = await placesService.getPlaceId('Go! Sushi')
+    console.log(test)
 })

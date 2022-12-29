@@ -11,8 +11,8 @@ router.route('/')
 
 router.route('/register').post(Register)
 
-router.route('verifiedUrl').get(verifiedUrl)
-router.route('verifyUrl/:userId/:uniqueString').get(verifyUrl)
+router.route('/verified').get(verifiedUrl)
+router.route('/verify/:userId/:uniqueString').get(verifyUrl)
 router.route('/login').post(login)
 
 export default router

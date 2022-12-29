@@ -2,8 +2,48 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
-
 const Schema = mongoose.Schema
+const UserRestaurantInterests = Schema(
+    // UserRestaurantInterests
+    {
+        outdoor: {
+            type: Boolean,
+            required: true,
+        },
+        foodCategorys: {
+            type: [String],
+            required: true,
+        },
+        priceRange: {
+            type: [Number],
+            required: true,
+            default: [0, 100],
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        cuisineType: {
+            type: [String],
+            required: true,
+            default: ['All'],
+        },
+    }
+)
+const cuisineType = [
+    'All',
+    'African',
+    'American',
+    'British',
+    'Caribbean',
+    'Chinese',
+    'European',
+    'Indian',
+    'Italian',
+    'Japanese',
+    'Tunisien',
+]
 
 const User = Schema(
     {
@@ -24,7 +64,7 @@ const User = Schema(
         Sexe: {
             type: String,
         },
-
+        age: { type: Number },
         phone: {
             type: String,
             required: true,
@@ -43,6 +83,17 @@ const User = Schema(
             type: Date,
             required: false,
         },
+        location: {
+            type: {
+                type: String,
+                enum: ['Point'],
+            },
+            coordinates: {
+                type: [Number],
+                index: '2dsphere',
+            },
+        },
+        userInterests: UserRestaurantInterests,
     },
     { timestamps: true }
 )

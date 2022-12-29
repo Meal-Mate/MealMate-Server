@@ -1,4 +1,5 @@
 import * as PropositionService from '../service/propostion.service.js'
+import haversine from 'haversine'
 
 export const addProposition = async (req, res) => {
     try {
@@ -51,6 +52,27 @@ export const deleteProposition = async (req, res) => {
     try {
         await PropositionService.deleteProposition(id)
         res.status(200).json({ message: 'Proposition deleted' })
+    } catch (error) {
+        res.status(500).json({ message: error.message, stack: error.stack })
+    }
+}
+
+export const getPropositionsByLocation = async (req, res) => {
+    try {
+        const userLocation = req.body.userLocation
+        const proposition = await getPropositions()
+        console.log(proposition)
+        console.log(userLocation)
+        const propositionsByLocation = proposition.filter((proposition) => {
+            const propositionLocation = {
+                latitude: proposition.latitude,
+                longitude: proposition.longitude,
+            }
+            const distance = haversine(userLocation, propositionLocation, {
+                unit: 'meter',
+            })
+            res.send(distance < 10000)
+        })
     } catch (error) {
         res.status(500).json({ message: error.message, stack: error.stack })
     }
