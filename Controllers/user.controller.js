@@ -208,10 +208,7 @@ export function login(req, res) {
 
             //admin Is Valid
             //This object is just used to remove the password from the retuned fields
-            let returnuser = {
-                email: user.email,
-                id: user._id,
-            }
+
             if (user.verified === false) {
                 return res.status(403).send({
                     message: 'Verify your Account.',
@@ -222,7 +219,7 @@ export function login(req, res) {
             return res.send({
                 success: true,
                 message: 'You can login now',
-                user: returnuser,
+                user,
                 token,
             })
         })
