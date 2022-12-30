@@ -43,10 +43,11 @@ export const getNearbyRestaurants = async ({ lat, lng, radius, keyword }) => {
         const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lng},${lat}&radius=${radius}&keyword=${keyword}&type=restaurant&key=${GOOGLE_PLACES_API_KEY}` //results dont show restos in shopping malls
         const response = await fetch(url)
         const data = await response.json()
-        data.results.forEach((element) => {
-            console.log(element.name)
-        })
-        return data.results
+        return data.results.map((element) => ({
+            ...element.geometry.location,
+            title: element.name,
+            id: element.place_id,
+        }))
     } catch (error) {
         console.log(error)
     }

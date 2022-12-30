@@ -5,16 +5,14 @@ export const getPropositionById = async (id) => {
     return Proposition.findById(id)
 }
 
-export const addProposition = async (userBody) => {
-    const getRestaurantByPlaceId = await placesService.getRestaurant(
-        userBody.placeId
-    )
+export const addProposition = async (placeId, owner) => {
+    const getRestaurantByPlaceId = await placesService.getRestaurant(placeId)
     const getPhotos = await placesService.getRestaurantImages(
         getRestaurantByPlaceId.photos[0].photo_reference
     )
     const proposition = {
-        owner: userBody.owner,
-        restaurantPlaceId: userBody.placeId,
+        owner,
+        restaurantPlaceId: placeId,
         restaurantAddress: getRestaurantByPlaceId.vicinity,
         restaurantImages: [getPhotos],
         userRatingsTotal: getRestaurantByPlaceId.user_ratings_total,

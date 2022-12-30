@@ -1,7 +1,6 @@
 import User from '../models/user.model.js'
 import UserVerification from '../models/UserVerification.js'
 import jwt from 'jsonwebtoken'
-import config from '../config.js'
 import bcrypt from 'bcrypt'
 import sgMail from '@sendgrid/mail'
 import { v4 as uuidv4 } from 'uuid'
@@ -170,6 +169,7 @@ export function login(req, res) {
     const query = { email }
     //Check the admin exists
     User.findOne(query, (err, user) => {
+        console.log(user)
         //Error during exuting the query
         if (err) {
             return res.send({
@@ -203,7 +203,7 @@ export function login(req, res) {
             //Generating the token
             const token = jwt.sign(
                 { user },
-                config.key /*{ expiresIn: ONE_WEEK }*/
+                process.env.ACCESS_TOKEN_SECRET_KEY
             )
 
             //admin Is Valid
