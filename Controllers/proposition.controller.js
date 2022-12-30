@@ -2,13 +2,18 @@ import * as PropositionService from '../service/propostion.service.js'
 import haversine from 'haversine'
 
 export const addProposition = async (req, res) => {
+    const { currentUser } = res.locals
     try {
-        const proposition = await PropositionService.addProposition(req.body)
+        const proposition = await PropositionService.addProposition(
+            req.body.placeId,
+            currentUser._id
+        )
         res.status(200).send(proposition)
     } catch (error) {
         res.status(500).json({ message: error.message, stack: error.stack })
     }
 }
+
 export const getPropositions = async (req, res) => {
     try {
         const proposition = await PropositionService.getProposition()

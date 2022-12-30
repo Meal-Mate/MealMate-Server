@@ -1,7 +1,5 @@
 import Admin from '../models/admin.model.js'
 import jwt from 'jsonwebtoken'
-import config from '../config.js'
-import middleware from '../middlewares/jwToken.js'
 
 export function Register(req, res) {
     const newadmin = new Admin({
@@ -64,7 +62,7 @@ export function login(req, res) {
             //Generating the token
             const token = jwt.sign(
                 { admin },
-                config.key /*{ expiresIn: ONE_WEEK }*/
+                process.env.ACCESS_TOKEN_SECRET_KEY
             )
 
             //admin Is Valid
